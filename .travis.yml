@@ -8,7 +8,7 @@ env:
 
 before_script:
   - wget http://getcomposer.org/composer.phar
-  - php composer.phar install
+  - php composer.phar install --no-dev
   - phpunit --coverage-clover=coverage.clover
 
 after_script:
@@ -18,3 +18,4 @@ after_script:
 notifications:
   email:
     - m.orioli@apperclass.com
+    - ruben.barilani.dev@gmail.com

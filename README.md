@@ -125,7 +125,7 @@ class MyEntitySitemapUrlProvider implements SitemapUrlProviderInterface
 Run the command to save an xml in your webroot. Use --dump to see the output. 
 
 ```shell
-php app/console apperclass:generate:sitemap
+php app/console apperclass:sitemap:generate
 ```
 
 
