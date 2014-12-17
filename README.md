@@ -1,6 +1,9 @@
 # Apperclass Sitemap Bundle
 
 [![Build Status](https://travis-ci.org/apperclass/sitemap-bundle.svg)](https://travis-ci.org/apperclass/sitemap-bundle)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/apperclass/sitemap-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/apperclass/sitemap-bundle/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/apperclass/sitemap-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/apperclass/sitemap-bundle/?branch=master)
+
 
 Apperclass Sitemap Bundle create a beautiful sitemap parsing your entities. It's easy to extend and customize. 
 
@@ -21,8 +24,8 @@ For example you can load all your entities from an EntityRepository.
 ```php
 <?php
 
-namespace Truelab\Humanitas\CoreBundle\Seo\Sitemap;
-use Apperclass\Bundle\SeoBundle\Sitemap\SitemapEntitiesProviderInterface;
+namespace Truelab\Humanitas\CoreBundle\Sitemap\Sitemap;
+use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapEntitiesProviderInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
 use Truelab\Humanitas\CoreBundle\Entity\Disease;
