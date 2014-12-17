@@ -1,5 +1,7 @@
 # Apperclass Sitemap Bundle
 
+[![Build Status](https://travis-ci.org/apperclass/sitemap-bundle.svg)](https://travis-ci.org/apperclass/sitemap-bundle)
+
 Apperclass Sitemap Bundle create a beautiful sitemap parsing your entities. It's easy to extend and customize. 
 
 ```shell
