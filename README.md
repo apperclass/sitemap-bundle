@@ -60,10 +60,9 @@ Create a tagged service to transform your object in a SitemapUrl
     </service>
 ```
 
-```php
-
 Implements SitemapUrlProviderInterface as you need
 
+```php
 <?php
 
 namespace MyProject\Sitemap;
