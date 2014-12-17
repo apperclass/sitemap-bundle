@@ -20,24 +20,6 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('apperclass_sitemap');
 
-//        $rootNode
-//            ->children()
-//                ->arrayNode('providers')
-//                ->prototype('array')
-//                    ->children()
-//                        ->arrayNode()
-//                            ->children()
-//                                ->scalarNode('sitemap_provider')->end()
-//                                ->scalarNode('entity_provider')->end()
-//                                ->scalarNode('changefreq')->end()
-//                                ->scalarNode('priority')->end()
-//                            ->end()
-//                        ->end()
-//                    ->end()
-//                ->end() // twitter
-//            ->end()
-//        ;
-
         return $treeBuilder;
     }
 }
