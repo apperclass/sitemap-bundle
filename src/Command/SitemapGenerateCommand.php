@@ -2,7 +2,6 @@
 
 namespace Apperclass\Bundle\SitemapBundle\Command;
 
-use Apperclass\Bundle\SitemapBundle\Sitemap\Sitemap;
 use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapGenerator;
 use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapXmlEncoder;
 use Symfony\Component\Console\Command\Command;
@@ -11,7 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GenerateSitemapCommand extends Command
+class SitemapGenerateCommand extends Command
 {
     /** @var SitemapGenerator  */
     protected $sitemapGenerator;
@@ -40,7 +39,7 @@ class GenerateSitemapCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('apperclass:generate:sitemap')
+            ->setName('apperclass:sitemap:generate')
             ->setDescription('Generate a sitemap')
             ->addOption('dump', null, InputOption::VALUE_NONE, 'If set dump the output to console')
         ;

@@ -2,7 +2,7 @@
 
 namespace Apperclass\Bundle\SitemapBundle\Tests\Command;
 
-use Apperclass\Bundle\SitemapBundle\Command\GenerateSitemapCommand;
+use Apperclass\Bundle\SitemapBundle\Command\SitemapGenerateCommand;
 use Apperclass\Bundle\SitemapBundle\Sitemap\Sitemap;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -15,13 +15,13 @@ class GenerateSitemapCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testExecute()
     {
-        $this->mockSitemapGenerator = $this->getMockSitemapGenerator();
+        $this->mockSitemapGenerator   = $this->getMockSitemapGenerator();
         $this->mockSitemapXmlEncoder = $this->getMockSitemapXmlEncoder();
 
         $application = new Application();
-        $application->add(new GenerateSitemapCommand($this->mockSitemapGenerator, $this->mockSitemapXmlEncoder, 'root'));
+        $application->add(new SitemapGenerateCommand($this->mockSitemapGenerator, $this->mockSitemapXmlEncoder, 'root'));
 
-        $command = $application->find('apperclass:generate:sitemap');
+        $command = $application->find('apperclass:sitemap:generate');
 
 
         $commandTester = new CommandTester($command);
