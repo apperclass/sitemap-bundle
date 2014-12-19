@@ -20,6 +20,15 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('apperclass_sitemap');
 
+        $rootNode
+            ->children()
+                ->scalarNode('path')
+                    ->defaultValue('%kernel.root_dir%/../web/sitemap.xml')
+                    ->cannotBeEmpty()
+                ->end()
+            ->end();
+
+
         return $treeBuilder;
     }
 }

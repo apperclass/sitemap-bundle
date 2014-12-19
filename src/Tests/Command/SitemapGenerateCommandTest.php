@@ -4,69 +4,83 @@ namespace Apperclass\Bundle\SitemapBundle\Tests\Command;
 
 use Apperclass\Bundle\SitemapBundle\Command\SitemapGenerateCommand;
 use Apperclass\Bundle\SitemapBundle\Sitemap\Sitemap;
+use Apperclass\Bundle\SitemapBundle\Tests\Filesystem\FilesystemTestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class GenerateSitemapCommandTest extends \PHPUnit_Framework_TestCase
+class GenerateSitemapCommandTest extends FilesystemTestCase
 {
-    protected $mockKernel;
-    protected $mockSitemapGenerator;
-    protected $mockSitemapXmlEncoder;
+    protected $command;
+
+    /**
+     * @var CommandTester
+     */
+    protected $commandTester;
+
+    protected $path;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->path   = $this->workspace . '/sitemap.xml';
+
+        $application = new Application();
+        $application->add(new SitemapGenerateCommand(
+            $this->getSitemapGeneratorMock(),
+            $this->getSitemapXmlEncoderMock(),
+            $this->path
+        ));
+
+        $this->commandTester = new CommandTester($application->find('apperclass:sitemap:generate'));
+    }
 
     public function testExecute()
     {
-        $this->mockSitemapGenerator   = $this->getMockSitemapGenerator();
-        $this->mockSitemapXmlEncoder = $this->getMockSitemapXmlEncoder();
-
-        $application = new Application();
-        $application->add(new SitemapGenerateCommand($this->mockSitemapGenerator, $this->mockSitemapXmlEncoder, 'root'));
-
-        $command = $application->find('apperclass:sitemap:generate');
-
-
-        $commandTester = new CommandTester($command);
-        $commandTester->execute(array('command' => $command->getName(), '--dump' => true));
-
-        $this->assertRegExp('/Sitemap Generation Success/', $commandTester->getDisplay());
+        $this->commandTester->execute(array());
+        $this->assertFileExists($this->path);
     }
 
-    public function getMockSitemapGenerator()
+    public function testExecuteWithDumpOption()
     {
-        $kernelMock = $this->getMockBuilder('Apperclass\Bundle\SitemapBundle\Sitemap\SitemapGenerator')
+        $this->commandTester->execute(array('--dump' => true));
+        $this->assertRegExp('/<xml><\/xml>/', $this->commandTester->getDisplay());
+        $this->assertFileNotExists($this->path);
+    }
+
+    public function testExecuteWithPathOption()
+    {
+        $path = $this->workspace . '/foobar.xml';
+        $this->commandTester->execute(array('--path' => $path));
+        $this->assertFileExists($path);
+    }
+
+    protected  function getSitemapGeneratorMock()
+    {
+        $mock = $this->getMockBuilder('Apperclass\Bundle\SitemapBundle\Sitemap\SitemapGenerator')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $kernelMock
+        $mock
             ->expects($this->any())
             ->method('generateSitemap')
             ->willReturn(new Sitemap());
 
-        return $kernelMock;
+        return $mock;
     }
 
-    public function getMockSitemapXmlEncoder()
+    protected function getSitemapXmlEncoderMock()
     {
-        $kernelMock = $this->getMockBuilder('Apperclass\Bundle\SitemapBundle\Sitemap\SitemapXmlEncoder')
+        $mock = $this->getMockBuilder('Apperclass\Bundle\SitemapBundle\Sitemap\SitemapXmlEncoder')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $kernelMock
+        $mock
             ->expects($this->any())
             ->method('toXml')
             ->willReturn('<xml></xml>');
 
-        return $kernelMock;
-    }
-
-    public function getCallback($service)
-    {
-        $map = array(
-            'kernel' => $this->mockKernel,
-            'apperclass_sitemap.sitemap_generator' => $this->mockSitemapGenerator,
-            'apperclass_sitemap.sitemap_xml_encoder' =>  $this->mockSitemapXmlEncoder
-        );
-
-        return $map[$service];
+        return $mock;
     }
 
 }
