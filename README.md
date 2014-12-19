@@ -128,5 +128,14 @@ Run the command to save an xml in your webroot. Use --dump to see the output.
 php app/console apperclass:sitemap:generate
 ```
 
+## Configuration reference
+
+```yaml
+
+apperclass_sitemap:
+    path: %kernel.root_dir%/../web/sitemap.xml
+
+```
+
 
 

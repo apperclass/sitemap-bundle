@@ -36,7 +36,7 @@
                  class="Apperclass\Bundle\SitemapBundle\Command\GenerateSitemapCommand">
             <argument type="service" id="apperclass_sitemap.sitemap_generator" />
             <argument type="service" id="apperclass_sitemap.sitemap_xml_encoder" />
-            <argument>%kernel.root_dir%</argument>
+            <argument>%apperclass_sitemap.path%</argument>
             <tag name="console.command" />
         </service>
 
