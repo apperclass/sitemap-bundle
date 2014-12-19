@@ -85,15 +85,14 @@ class SitemapGenerateCommand extends Command
 
     protected function checkPath($path)
     {
-
-        // check if dir exists
-        if(!file_exists(dirname($path))) {
-            throw new IOException(dirname($path) ."doesn't exists!");
+        // check dir exists
+        if(!realpath(dirname($path))) {
+            throw new IOException("Dir doesn't exists!");
         }
 
         // check if the path is not a dir
         if(is_dir($path)) {
-            throw new IOException(dirname($path) ." is a dir not a path to the output file!");
+            throw new IOException("Path is a dir not an absolute path to the output file!");
         }
     }
 }

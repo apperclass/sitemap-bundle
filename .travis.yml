@@ -8,12 +8,12 @@ env:
 
 before_script:
   - wget http://getcomposer.org/composer.phar
-  - php composer.phar install --no-dev
-  - phpunit --coverage-clover=coverage.clover
+  - php composer.phar install
+  - php composer.phar test
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
-  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+  - php ocular.phar code-coverage:upload --format=php-clover build/logs/clover-coverage.xml
 
 notifications:
   email:

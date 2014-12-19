@@ -35,6 +35,24 @@ class GenerateSitemapCommandTest extends FilesystemTestCase
         $this->commandTester = new CommandTester($application->find('apperclass:sitemap:generate'));
     }
 
+    /**
+     * @expectedException        \Symfony\Component\Filesystem\Exception\IOException
+     * @expectedExceptionMessage Dir doesn't exists!
+     */
+    public function testIOExceptionDirDoesntExists()
+    {
+        $this->commandTester->execute(array('--path' => '/../foo/sitemap.xml' ));
+    }
+
+    /**
+     * @expectedException        \Symfony\Component\Filesystem\Exception\IOException
+     * @expectedExceptionMessage Path is a dir not an absolute path to the output file!
+     */
+    public function testIOExceptionPathIsADir()
+    {
+        $this->commandTester->execute(array('--path' => $this->workspace ));
+    }
+
     public function testExecute()
     {
         $this->commandTester->execute(array());
