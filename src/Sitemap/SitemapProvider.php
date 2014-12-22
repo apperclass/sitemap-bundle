@@ -35,13 +35,21 @@ class SitemapProvider
      *
      * @return Sitemap
      */
-    public function getSitemap($objects)
+    public function getSitemap($objects = null)
     {
         $sitemap = new Sitemap();
-        foreach ($objects as $object) {
-            $sitemapUrl = $this->getSitemapUrl($object);
-            if ($sitemapUrl) {
-                $sitemap->addSitemapUrl($sitemapUrl);
+
+        if($objects) {
+            foreach ($objects as $object) {
+                $sitemapUrl = $this->getSitemapUrl($object);
+                if ($sitemapUrl) {
+                    $sitemap->addSitemapUrl($sitemapUrl);
+                }
+            }
+        }else{
+            /** @var SitemapUrlProviderInterface $provider */
+            foreach ($this->sitemapUrlProviders as $provider) {
+                $provider->populate($sitemap);
             }
         }
 

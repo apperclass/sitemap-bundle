@@ -37,13 +37,19 @@ class SitemapGenerator
      */
     public function generateSitemap()
     {
-        $entities = array();
-        /** @var SitemapEntitiesProviderInterface $provider */
-        foreach ($this->sitemapEntitiesProviders as $provider) {
-            $entities = array_merge($entities, $provider->getEntities());
-        }
+        if(sizeof($this->sitemapEntitiesProviders) > 0) {
+            $entities = array();
+            /** @var SitemapEntitiesProviderInterface $provider */
+            foreach ($this->sitemapEntitiesProviders as $provider) {
+                $entities = array_merge($entities, $provider->getEntities());
+            }
 
-        return $this->sitemapProvider->getSitemap($entities);
+            return $this->sitemapProvider->getSitemap($entities);
+
+        }else{
+
+            return $this->sitemapProvider->getSitemap();
+        }
     }
 
 
