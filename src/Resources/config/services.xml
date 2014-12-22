@@ -26,10 +26,10 @@
         </service>
 
         <!-- SITEMAP ENTITIES PROVIDER -->
-        <service id="apperclass_sitemap.sitemap_entities_provider" class="%apperclass_sitemap.sitemap_entities_provider.class%">
+        <!--<service id="apperclass_sitemap.sitemap_entities_provider" class="%apperclass_sitemap.sitemap_entities_provider.class%">
             <argument type="service" id="doctrine.orm.default_entity_manager" />
             <tag name="apperclass_sitemap.sitemap_entities_provider" />
-        </service>
+        </service>-->
 
         <!-- SITEMAP GENERATE COMMAND -->
         <service id="apperclass_sitemap.command.generate_sitemap_command"
