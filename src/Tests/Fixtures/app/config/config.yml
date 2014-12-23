@@ -1,0 +1,19 @@
+framework:
+    secret:          Oh! Oh! Oh!
+    router:          { resource: "%kernel.root_dir%/config/routing.yml" }
+    form:            true
+    csrf_protection: true
+    session:         ~
+    default_locale:  en
+    translator:      { fallback: en }
+    profiler:        { only_exceptions: false }
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver:   pdo_sqlite
+        path:     :memory:
+        memory:   true
+    orm:
+        default_entity_manager: default
+
