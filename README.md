@@ -1,8 +1,8 @@
 # Apperclass Sitemap Bundle
 
-[![Build Status](https://travis-ci.org/hal9087/sitemap-bundle.svg)](https://travis-ci.org/apperclass/sitemap-bundle)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/hal9087/sitemap-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/apperclass/sitemap-bundle/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/hal9087/sitemap-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/apperclass/sitemap-bundle/?branch=master)
+[![Build Status](https://travis-ci.org/hal9087/sitemap-bundle.svg)](https://travis-ci.org/hal9087/sitemap-bundle)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/hal9087/sitemap-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/hal9087/sitemap-bundle/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/hal9087/sitemap-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/hal9087/sitemap-bundle/?branch=master)
 
 
 Apperclass Sitemap Bundle create a beautiful sitemap parsing your entities. It's easy to extend and customize. 
