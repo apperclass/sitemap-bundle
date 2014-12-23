@@ -22,17 +22,9 @@ class Sitemap implements SitemapInterface
     }
 
     /**
-     * @param SitemapUrl $sitemapUrl
-     */
-    public function addSitemapUrl(SitemapUrl $sitemapUrl)
-    {
-        $this->sitemapUrls[] = $sitemapUrl;
-    }
-
-    /**
      * @return SitemapUrl[]
      */
-    public function getSitemapUrls()
+    public function getAll()
     {
         return $this->sitemapUrls;
     }

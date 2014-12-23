@@ -30,7 +30,7 @@ class ApperclassSitemapBundleTest extends \PHPUnit_Framework_TestCase
         $mock = $this->getContainerBuilderMock();
 
         $mock
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(1))
             ->method('addCompilerPass');
 
         $this->bundle->build($mock);

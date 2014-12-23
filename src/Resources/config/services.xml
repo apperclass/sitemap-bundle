@@ -4,11 +4,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-        <parameter key="apperclass_sitemap.sitemap_entities_provider.class">Apperclass\Bundle\SitemapBundle\Sitemap\SitemapEntitiesProvider</parameter>
-    </parameters>
-
-
     <services>
         <!-- SITEMAP GENERATOR -->
         <service id="apperclass_sitemap.sitemap_generator" class="Apperclass\Bundle\SitemapBundle\Sitemap\SitemapGenerator">
@@ -16,20 +11,10 @@
         </service>
 
         <!-- SITEMAP PROVIDER -->
-        <service id="apperclass_sitemap.sitemap_provider" class="Apperclass\Bundle\SitemapBundle\Sitemap\SitemapProvider">
-
-        </service>
+        <service id="apperclass_sitemap.sitemap_provider" class="Apperclass\Bundle\SitemapBundle\Sitemap\SitemapProvider" />
 
         <!-- SITEMAP XML ENCODER -->
-        <service id="apperclass_sitemap.sitemap_xml_encoder" class="Apperclass\Bundle\SitemapBundle\Sitemap\SitemapXmlEncoder">
-
-        </service>
-
-        <!-- SITEMAP ENTITIES PROVIDER -->
-        <!--<service id="apperclass_sitemap.sitemap_entities_provider" class="%apperclass_sitemap.sitemap_entities_provider.class%">
-            <argument type="service" id="doctrine.orm.default_entity_manager" />
-            <tag name="apperclass_sitemap.sitemap_entities_provider" />
-        </service>-->
+        <service id="apperclass_sitemap.sitemap_xml_encoder" class="Apperclass\Bundle\SitemapBundle\Sitemap\SitemapXmlEncoder" />
 
         <!-- SITEMAP GENERATE COMMAND -->
         <service id="apperclass_sitemap.command.generate_sitemap_command"
