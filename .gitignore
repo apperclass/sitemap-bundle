@@ -1,3 +1,7 @@
+# Test Fixtures
+/src/Tests/Fixtures/web/*
+!/src/Tests/Fixtures/web/.gitkeep
+
 # Cache and logs (Symfony2)
 /app/cache/*
 /app/logs/*
