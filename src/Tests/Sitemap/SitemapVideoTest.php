@@ -2,7 +2,6 @@
 
 namespace Apperclass\Bundle\SitemapBundle\Tests\Sitemap;
 
-use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapImage;
 use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapVideo;
 
 class SitemapVideoTest extends \PHPUnit_Framework_TestCase

@@ -25,5 +25,9 @@ interface SitemapUrlProviderInterface
      */
     public function getSitemapUrl($object);
 
-
+    /**
+     * @param SitemapInterface $sitemap
+     * @return void
+     */
+    public function populate(SitemapInterface $sitemap);
 }

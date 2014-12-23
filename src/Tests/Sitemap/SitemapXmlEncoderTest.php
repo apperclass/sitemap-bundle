@@ -2,32 +2,20 @@
 
 namespace Apperclass\Bundle\SitemapBundle\Tests\Sitemap;
 
+use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapProvider;
 use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapXmlEncoder;
-use Apperclass\Bundle\SitemapBundle\Tests\Provider\SitemapFactory;
+use Apperclass\Bundle\SitemapBundle\Tests\Fixtures\Application\TestableSitemapUrlProvider;
 
 class SitemapXmlEncoderTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @dataProvider sitemapProvider
-     */
-    public function testToXml($sitemap)
+    public function testToXml()
     {
         $sitemapXmlEncoder = new SitemapXmlEncoder();
-        $xml = $sitemapXmlEncoder->toXml($sitemap);
-        $result = simplexml_load_string($xml);
+        $sitemapProvider   = new SitemapProvider();
+        $sitemapProvider->addSitemapUrlProvider(new TestableSitemapUrlProvider());
+        $xml = $sitemapXmlEncoder->toXml($sitemapProvider->getSitemap());
 
+        $result = simplexml_load_string($xml);
         $this->assertTrue($result instanceof \SimpleXMLElement, sprintf('This is not a valid xml %s', $xml));
     }
-
-    public function sitemapProvider()
-    {
-        $data = array();
-        $provider = new SitemapFactory();
-        for ($i = 0; $i < 3; $i++) {
-            $data[$i] = array($provider->getRandomSitemap());
-        }
-
-        return $data;
-    }
-
 }

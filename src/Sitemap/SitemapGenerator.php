@@ -24,27 +24,13 @@ class SitemapGenerator
         $this->sitemapProvider = $sitemapProvider;
     }
 
-    /**
-     * @param SitemapEntitiesProviderInterface $sitemapEntitiesProvider
-     */
-    public function addSitemapEntitiesProvider(SitemapEntitiesProviderInterface $sitemapEntitiesProvider)
-    {
-        $this->sitemapEntitiesProviders[] = $sitemapEntitiesProvider;
-    }
 
     /**
      * @return Sitemap
      */
     public function generateSitemap()
     {
-        $entities = array();
-        /** @var SitemapEntitiesProviderInterface $provider */
-        foreach ($this->sitemapEntitiesProviders as $provider) {
-            $entities = array_merge($entities, $provider->getEntities());
-        }
-
-        return $this->sitemapProvider->getSitemap($entities);
+        return $this->sitemapProvider->getSitemap();
     }
-
 
 }

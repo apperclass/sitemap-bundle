@@ -5,35 +5,28 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="apperclass_sitemap.sitemap_entities_provider.class">Apperclass\Bundle\SitemapBundle\Sitemap\SitemapEntitiesProvider</parameter>
+        <parameter key="apperclass_sitemap.sitemap_generator.class">Apperclass\Bundle\SitemapBundle\Sitemap\SitemapGenerator</parameter>
+        <parameter key="apperclass_sitemap.sitemap_provider.class">Apperclass\Bundle\SitemapBundle\Sitemap\SitemapProvider</parameter>
+        <parameter key="apperclass_sitemap.sitemap_xml_encoder.class">Apperclass\Bundle\SitemapBundle\Sitemap\SitemapXmlEncoder</parameter>
+        <parameter key="apperclass_sitemap.sitemap_generate_command.class">Apperclass\Bundle\SitemapBundle\Command\SitemapGenerateCommand</parameter>
     </parameters>
 
-
     <services>
+
         <!-- SITEMAP GENERATOR -->
-        <service id="apperclass_sitemap.sitemap_generator" class="Apperclass\Bundle\SitemapBundle\Sitemap\SitemapGenerator">
+        <service id="apperclass_sitemap.sitemap_generator" class="%apperclass_sitemap.sitemap_generator.class%">
             <argument type="service" id="apperclass_sitemap.sitemap_provider" />
         </service>
 
         <!-- SITEMAP PROVIDER -->
-        <service id="apperclass_sitemap.sitemap_provider" class="Apperclass\Bundle\SitemapBundle\Sitemap\SitemapProvider">
-
-        </service>
+        <service id="apperclass_sitemap.sitemap_provider" class="Apperclass\Bundle\SitemapBundle\Sitemap\SitemapProvider" />
 
         <!-- SITEMAP XML ENCODER -->
-        <service id="apperclass_sitemap.sitemap_xml_encoder" class="Apperclass\Bundle\SitemapBundle\Sitemap\SitemapXmlEncoder">
-
-        </service>
-
-        <!-- SITEMAP ENTITIES PROVIDER -->
-        <service id="apperclass_sitemap.sitemap_entities_provider" class="%apperclass_sitemap.sitemap_entities_provider.class%">
-            <argument type="service" id="doctrine.orm.default_entity_manager" />
-            <tag name="apperclass_sitemap.sitemap_entities_provider" />
-        </service>
+        <service id="apperclass_sitemap.sitemap_xml_encoder" class="Apperclass\Bundle\SitemapBundle\Sitemap\SitemapXmlEncoder" />
 
         <!-- SITEMAP GENERATE COMMAND -->
-        <service id="apperclass_sitemap.command.generate_sitemap_command"
-                 class="Apperclass\Bundle\SitemapBundle\Command\SitemapGenerateCommand">
+        <service id="apperclass_sitemap.sitemap_generate_command"
+                 class="%apperclass_sitemap.sitemap_generate_command.class%">
             <argument type="service" id="apperclass_sitemap.sitemap_generator" />
             <argument type="service" id="apperclass_sitemap.sitemap_xml_encoder" />
             <argument>%apperclass_sitemap.path%</argument>
@@ -41,5 +34,4 @@
         </service>
 
     </services>
-
 </container>

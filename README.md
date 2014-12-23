@@ -1,66 +1,25 @@
 # Apperclass Sitemap Bundle
 
-[![Build Status](https://travis-ci.org/apperclass/sitemap-bundle.svg)](https://travis-ci.org/apperclass/sitemap-bundle)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/apperclass/sitemap-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/apperclass/sitemap-bundle/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/apperclass/sitemap-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/apperclass/sitemap-bundle/?branch=master)
+[![Build Status](https://travis-ci.org/hal9087/sitemap-bundle.svg)](https://travis-ci.org/hal9087/sitemap-bundle)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/hal9087/sitemap-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/hal9087/sitemap-bundle/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/hal9087/sitemap-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/hal9087/sitemap-bundle/?branch=master)
 
 
 Apperclass Sitemap Bundle create a beautiful sitemap parsing your entities. It's easy to extend and customize. 
 
 ```shell
-php app/console apperclass:generate:sitemap
-```
-
-## Load the entities you need with a custom entity provider
-
-```xml
-    <parameters>
-        <parameter key="apperclass_sitemap.sitemap_entities_provider.class">MyProject\Sitemap\SitemapEntitiesProvider</parameter>
-    </parameters>
-```
-
-For example you can load all your entities from an EntityRepository.
-
-```php
-<?php
-
-namespace Truelab\Humanitas\CoreBundle\Sitemap\Sitemap;
-use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapEntitiesProviderInterface;
-use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\EntityManager;
-use Truelab\Humanitas\CoreBundle\Entity\Disease;
-
-class SitemapEntitiesProvider implements SitemapEntitiesProviderInterface
-{
-    /** @var \Doctrine\ORM\EntityManager  */
-    protected $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
-    /**
-     * @return array
-     */
-    public function getEntities()
-    {
-        $repository = $this->entityManager->getRepository('MyProject\Entity\MyEntity');
-        $results = $repository->findAll();
-
-        return $entities;
-    }
-}
+php app/console apperclass:sitemap:generate
 ```
 
 
 ##  Create your own sitemap url provider
 
-Create a tagged service to transform your object in a SitemapUrl 
+Create a tagged service to populate the sitemap as you want. Example:
 
 ```xml
     <service id="my_project.my_custom_sitemap_url_provider" class="MyProject\Sitemap\MyEntitySitemapUrlProvider">
         <argument type="service" id="router" />
+        <argument type="service" id="my_project.repository.my_entity_repository" />
         <tag name="apperclass_sitemap.sitemap_url_provider" />
     </service>
 ```
@@ -72,21 +31,22 @@ Implements SitemapUrlProviderInterface as you need
 
 namespace MyProject\Sitemap;
 
-use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapEntitiesProviderInterface;
 use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapUrl;
 use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapUrlProviderInterface;
-use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use MyProject\Repository\MyEntityRepository;
 
 class MyEntitySitemapUrlProvider implements SitemapUrlProviderInterface
 {
 
     protected $router;
 
-    public function __construct(Router $router)
+    protected $myEntityRepository;
+
+    public function __construct(Router $router, MyEntityRepository $myEntityRepository)
     {
         $this->router = $router;
+        $this->myEntityRepository = $myEntityRepository;
     }
 
     /**
@@ -115,6 +75,20 @@ class MyEntitySitemapUrlProvider implements SitemapUrlProviderInterface
         $sitemapUrl->setLoc($url);
 
         return $sitemapUrl;
+    }
+
+    /**
+     * @param SitemapInterface
+     */
+    public function populate(SitemapInterface $sitemap)
+    {
+        $entities = $this->myEntityRepository->findAll();
+
+        foreach($entities as $entity) {
+            if($this->supportsObject($entity) {
+                 $sitemap->add($this->getSitemapUrl($entity));
+            }
+        }
     }
 }
 ```

@@ -8,7 +8,7 @@ namespace Apperclass\Bundle\SitemapBundle\Sitemap;
  *
  * @package Apperclass\Bundle\SitemapBundle\Sitemap
  */
-class Sitemap
+class Sitemap implements SitemapInterface
 {
     /** @var SitemapUrl[] */
     protected $sitemapUrls;
@@ -22,18 +22,16 @@ class Sitemap
     }
 
     /**
-     * @param SitemapUrl $sitemapUrl
-     */
-    public function addSitemapUrl(SitemapUrl $sitemapUrl)
-    {
-        $this->sitemapUrls[] = $sitemapUrl;
-    }
-
-    /**
      * @return SitemapUrl[]
      */
-    public function getSitemapUrls()
+    public function getAll()
     {
         return $this->sitemapUrls;
+    }
+
+    public function add(SitemapUrl $sitemapUrl)
+    {
+        $this->sitemapUrls[] = $sitemapUrl;
+        return $this;
     }
 }

@@ -22,11 +22,10 @@ class SitemapXmlEncoder
     }
 
     /**
-     * @param Sitemap $sitemap
-     *
+     * @param SitemapInterface $sitemap
      * @return string
      */
-    public function toXml(Sitemap $sitemap)
+    public function toXml(SitemapInterface $sitemap)
     {
 
         $this->writer->openMemory();
@@ -37,7 +36,7 @@ class SitemapXmlEncoder
         $this->writer->writeAttribute('xmlns:image', 'http://www.google.com/schemas/sitemap-image/1.1');
         $this->writer->writeAttribute('xmlns:video', 'http://www.google.com/schemas/sitemap-video/1.1');
 
-        foreach ($sitemap->getSitemapUrls() as $sitemapUrl) {
+        foreach ($sitemap->getAll() as $sitemapUrl) {
             $this->sitemapUrlToXml($sitemapUrl);
         }
 
@@ -111,6 +110,4 @@ class SitemapXmlEncoder
     {
         // @TODO
     }
-
-
 }
