@@ -2,39 +2,51 @@
 
 namespace Apperclass\Bundle\SitemapBundle\Command;
 
-use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapGenerator;
-use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapXmlEncoder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Exception\IOException;
+
+use Apperclass\Bundle\SitemapBundle\Sitemap\Encoder\SitemapEncoderManagerInterface;
+use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapGenerator;
+use Apperclass\Bundle\SitemapBundle\Sitemap\Writer\SitemapFileWriter;
 
 class SitemapGenerateCommand extends Command
 {
     /** @var SitemapGenerator  */
     protected $sitemapGenerator;
-    /** @var SitemapXmlEncoder */
-    protected $sitemapXmlEncoder;
+
+    /** @var SitemapEncoderManagerInterface */
+    protected $sitemapEncoderManager;
+
     /** @var string  */
     protected $path;
 
     /**
-     * @param SitemapGenerator $sitemapGenerator
-     * @param SitemapXmlEncoder $sitemapXmlEncoder
-     * @param string $path
-     * @throws \Symfony\Component\Filesystem\Exception\IOException
+     * @var SitemapFileWriter
      */
-    public function __construct(SitemapGenerator $sitemapGenerator, SitemapXmlEncoder $sitemapXmlEncoder, $path)
+    protected $writer;
+
+    /**
+     * @param SitemapGenerator $sitemapGenerator
+     * @param SitemapEncoderManagerInterface $sitemapEncoderManager
+     * @param SitemapFileWriter $writer
+     * @param $path
+     */
+    public function __construct(SitemapGenerator $sitemapGenerator,
+                                SitemapEncoderManagerInterface $sitemapEncoderManager,
+                                SitemapFileWriter $writer,
+                                $path)
     {
+        $this->sitemapGenerator  = $sitemapGenerator;
+        $this->sitemapEncoderManager  = $sitemapEncoderManager;
+        $this->path   = $path;
+        $this->writer = $writer;
+
+        $this->writer->setPath($this->path);
+
         parent::__construct();
-
-        $this->sitemapGenerator = $sitemapGenerator;
-        $this->sitemapXmlEncoder = $sitemapXmlEncoder;
-        $this->path = $path;
-
-        $this->checkPath($path);
     }
 
 
@@ -46,9 +58,9 @@ class SitemapGenerateCommand extends Command
         $this
             ->setName('apperclass:sitemap:generate')
             ->setDescription('Generate a sitemap')
-            ->addOption('dump', null, InputOption::VALUE_NONE, 'If set dump the output to console')
-            ->addOption('path', null, InputOption::VALUE_OPTIONAL,
-                'If set change the default output path')
+            ->addOption('path', null, InputOption::VALUE_OPTIONAL, 'Change the default output file path', $this->path)
+            ->addOption('format', null, InputOption::VALUE_OPTIONAL, 'Sets the output format <info>['. implode('|',$this->sitemapEncoderManager->getFormats()) .']</info>', 'xml')
+            ->addOption('dump', null, InputOption::VALUE_NONE, 'Dump the output to console instead of writing to a file')
         ;
     }
 
@@ -60,39 +72,45 @@ class SitemapGenerateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln("<info>Start generating the sitemap..</info>");
+        $format = $input->getOption('format');
+        $dump   = $input->getOption('dump');
+        $path   = $input->getOption('path');
 
         $sitemap = $this->sitemapGenerator->generateSitemap();
-        $xml     = $this->sitemapXmlEncoder->toXml($sitemap);
+        $string  = $this->sitemapEncoderManager->encode($sitemap, $format);
 
-        $output->writeln("<info>Sitemap generation success</info>");
-
-        if ($input->getOption('dump')) {
-
-            $output->writeln("");
-            $output->write($xml);
-
-        } else {
-
-            $path = $input->getOption('path') ? $input->getOption('path') : $this->path;
-            $this->checkPath($path);
-
-            file_put_contents($path, $xml);
-
-            $output->writeln("<info>Sitemap file was updated</info>");
+        if($dump) {
+            return $this->executeDump($output, $string);
         }
+
+        return $this->executeWrite($output, $path, $string);
     }
 
-    protected function checkPath($path)
+    protected function executeDump(OutputInterface $output, $string)
     {
-        // check dir exists
-        if(!realpath(dirname($path))) {
-            throw new IOException("Dir doesn't exists!");
+        $output->writeln($string);
+        return;
+    }
+
+    protected function executeWrite(OutputInterface $output, $path, $string)
+    {
+
+        if (!$this->getHelper('dialog')->askConfirmation(
+            $output,
+            "<question>This operation could overwrite existing files, continue with this action (y/N)?</question> ",
+            false
+        )) {
+            $output->writeln("<info>aborted.</info>");
+            return;
         }
 
-        // check if the path is not a dir
-        if(is_dir($path)) {
-            throw new IOException("Path is a dir not an absolute path to the output file!");
-        }
+        $this
+            ->writer
+            ->setPath($path)
+            ->write($string);
+
+        $output->writeln("<info>file '" . realpath($path) ."' was updated.</info>");
+
+        return;
     }
 }

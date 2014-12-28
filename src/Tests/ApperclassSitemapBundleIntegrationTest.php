@@ -14,7 +14,9 @@ class ApperclassSitemapBundleIntegrationTest extends WebTestCase
         'apperclass_sitemap.sitemap_generator',
         'apperclass_sitemap.sitemap_provider',
         'apperclass_sitemap.sitemap_xml_encoder',
-        'apperclass_sitemap.sitemap_entities_provider',
+        'apperclass_sitemap.sitemap_text_encoder',
+        'apperclass_sitemap.sitemap_encoder_manager',
+        'apperclass_sitemap.sitemap_file_writer',
         'apperclass_sitemap.sitemap_generate_command'
     );
 

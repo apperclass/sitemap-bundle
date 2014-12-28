@@ -5,128 +5,62 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/apperclass/sitemap-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/apperclass/sitemap-bundle/?branch=master)
 
 
-Apperclass Sitemap Bundle create a beautiful sitemap parsing your entities. It's easy to extend and customize. 
-
-```shell
-php app/console apperclass:generate:sitemap
-```
-
-## Load the entities you need with a custom entity provider
-
-```xml
-    <parameters>
-        <parameter key="apperclass_sitemap.sitemap_entities_provider.class">MyProject\Sitemap\SitemapEntitiesProvider</parameter>
-    </parameters>
-```
-
-For example you can load all your entities from an EntityRepository.
-
-```php
-<?php
-
-namespace Truelab\Humanitas\CoreBundle\Sitemap\Sitemap;
-use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapEntitiesProviderInterface;
-use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\EntityManager;
-use Truelab\Humanitas\CoreBundle\Entity\Disease;
-
-class SitemapEntitiesProvider implements SitemapEntitiesProviderInterface
-{
-    /** @var \Doctrine\ORM\EntityManager  */
-    protected $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
-    /**
-     * @return array
-     */
-    public function getEntities()
-    {
-        $repository = $this->entityManager->getRepository('MyProject\Entity\MyEntity');
-        $results = $repository->findAll();
-
-        return $entities;
-    }
-}
-```
+Apperclass Sitemap Bundle help you to create a sitemap for your site. It's easy to extend and customize.
 
 
 ##  Create your own sitemap url provider
 
-Create a tagged service to transform your object in a SitemapUrl 
+Create a tagged service to populate the sitemap
 
 ```xml
-    <service id="my_project.my_custom_sitemap_url_provider" class="MyProject\Sitemap\MyEntitySitemapUrlProvider">
-        <argument type="service" id="router" />
+    <service id="my_project.my_custom_sitemap_url_provider" class="MyProject\Sitemap\MySitemapUrlProvider">
         <tag name="apperclass_sitemap.sitemap_url_provider" />
     </service>
 ```
 
-Implements SitemapUrlProviderInterface as you need
+Implements SitemapUrlProviderInterface as you need.
 
 ```php
 <?php
 
 namespace MyProject\Sitemap;
 
-use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapEntitiesProviderInterface;
-use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapUrl;
-use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapUrlProviderInterface;
-use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Apperclass\Bundle\SitemapBundle\Sitemap\Model\SitemapInterface;
+use Apperclass\Bundle\SitemapBundle\Sitemap\Model\SitemapUrl;
+use Apperclass\Bundle\SitemapBundle\Sitemap\Provider\SitemapUrlProviderInterface;
 
-class MyEntitySitemapUrlProvider implements SitemapUrlProviderInterface
+class MySitemapUrlProvider implements SitemapUrlProviderInterface
 {
 
-    protected $router;
-
-    public function __construct(Router $router)
-    {
-        $this->router = $router;
-    }
-
     /**
-     * @param mixed $object
-     *
-     * @return bool
+     * @param SitemapInterface $sitemap
+     * @return void
      */
-    public function supportsObject($object)
-    {
-        if ($object instanceof MyEntity) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param mixed $object
-     *
-     * @return SitemapUrl
-     */
-    public function getSitemapUrl($object)
+    public function populate(SitemapInterface $sitemap)
     {
         $sitemapUrl = new SitemapUrl();
-        $url = $this->router->generate('my_route', array('slug' => $object->getSlug()));
+        $url = 'http://www.mysite.com';
         $sitemapUrl->setLoc($url);
 
-        return $sitemapUrl;
+        $sitemap->add($url);
     }
 }
 ```
 
+This example of SitemapUrlProvider is trivial but it's a service so you can inject all you need to
+populate the sitemap.
+
 
 ## Run the command
 
-Run the command to save an xml in your webroot. Use --dump to see the output. 
+Run the command to write a file in a available format. Use --dump to see the output.
 
 ```shell
-php app/console apperclass:sitemap:generate
+php app/console apperclass:sitemap:generate [--path[="..."]] [--format[="..."]] [--dump]
 ```
+
+* You can specify in which format you want the sitemap by using ```--format``` option. (default: xml)
+* You can specify the path to the output as an absolute path by using ```--path``` option. (default: apperclass_sitemap.path)
 
 ## Configuration reference
 
@@ -135,6 +69,50 @@ php app/console apperclass:sitemap:generate
 apperclass_sitemap:
     path: %kernel.root_dir%/../web/sitemap.xml
 
+```
+
+### Add a custom encoder (available format)
+
+You can add a custom encoder/format by implementing a SitemapEncoderInterface:
+
+```php
+<?php
+
+namespace MyProject\Sitemap;
+
+use Apperclass\Bundle\SitemapBundle\Sitemap\Encoder\SitemapEncoderInterface;
+
+class MyFormatEncoder implements SitemapEncoderInterface
+{
+    /**
+     * @param SitemapInterface $sitemap
+     * @return string $string
+     */
+    public function encode(SitemapInterface $sitemap)
+    {
+        // ... encoding logic;
+        return $string;
+    }
+
+    public function getFormat()
+    {
+        return 'my-format';
+    }
+}
+```
+
+register this class as a tagged service:
+
+```xml
+<service id="my_project.sitemap_my_format_encoder" class="MyProject\Sitemap\MyFormatEncoder">
+    <tag name="apperclass_sitemap.sitemap_encoder" />
+</service>
+```
+
+and you are done. Now you can use the new format with the generate command.
+
+```shell
+php app/console apperclass:sitemap:generate --format="my-format" --path="/my-project/sitemap.my-format"
 ```
 
 

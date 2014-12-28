@@ -9,8 +9,6 @@ class AppKernel extends Kernel
     {
         return array(
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-            new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
-
             new Apperclass\Bundle\SitemapBundle\ApperclassSitemapBundle()
         );
     }
@@ -36,4 +34,4 @@ class AppKernel extends Kernel
         return sys_get_temp_dir().'/ApperclassSitemapBundle/logs';
     }
 
-} 
+}

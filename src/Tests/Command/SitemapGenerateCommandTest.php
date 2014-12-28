@@ -3,10 +3,12 @@
 namespace Apperclass\Bundle\SitemapBundle\Tests\Command;
 
 use Apperclass\Bundle\SitemapBundle\Command\SitemapGenerateCommand;
-use Apperclass\Bundle\SitemapBundle\Sitemap\Sitemap;
+use Apperclass\Bundle\SitemapBundle\Sitemap\Writer\SitemapFileWriter;
+use Apperclass\Bundle\SitemapBundle\Sitemap\Model\Sitemap;
 use Apperclass\Bundle\SitemapBundle\Tests\Filesystem\FilesystemTestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+
 
 class GenerateSitemapCommandTest extends FilesystemTestCase
 {
@@ -28,29 +30,21 @@ class GenerateSitemapCommandTest extends FilesystemTestCase
         $application = new Application();
         $application->add(new SitemapGenerateCommand(
             $this->getSitemapGeneratorMock(),
-            $this->getSitemapXmlEncoderMock(),
+            $this->getSitemapEncoderManagerMock(),
+            (new SitemapFileWriter()),
             $this->path
         ));
 
-        $this->commandTester = new CommandTester($application->find('apperclass:sitemap:generate'));
-    }
+        $dialog = $this->getMock('Symfony\Component\Console\Helper\DialogHelper', array('askConfirmation'));
+        $dialog->expects($this->any())
+            ->method('askConfirmation')
+            ->will($this->returnValue(true)); // The user confirms
 
-    /**
-     * @expectedException        \Symfony\Component\Filesystem\Exception\IOException
-     * @expectedExceptionMessage Dir doesn't exists!
-     */
-    public function testIOExceptionDirDoesntExists()
-    {
-        $this->commandTester->execute(array('--path' => '/../foo/sitemap.xml' ));
-    }
+        // We override the standard helper with our mock
+        $command = $application->find('apperclass:sitemap:generate');
+        $command->getHelperSet()->set($dialog, 'dialog');
 
-    /**
-     * @expectedException        \Symfony\Component\Filesystem\Exception\IOException
-     * @expectedExceptionMessage Path is a dir not an absolute path to the output file!
-     */
-    public function testIOExceptionPathIsADir()
-    {
-        $this->commandTester->execute(array('--path' => $this->workspace ));
+        $this->commandTester = new CommandTester($command);
     }
 
     public function testExecute()
@@ -59,6 +53,9 @@ class GenerateSitemapCommandTest extends FilesystemTestCase
         $this->assertFileExists($this->path);
     }
 
+    /**
+     * @group only
+     */
     public function testExecuteWithDumpOption()
     {
         $this->commandTester->execute(array('--dump' => true));
@@ -89,14 +86,38 @@ class GenerateSitemapCommandTest extends FilesystemTestCase
 
     protected function getSitemapXmlEncoderMock()
     {
-        $mock = $this->getMockBuilder('Apperclass\Bundle\SitemapBundle\Sitemap\SitemapXmlEncoder')
+        $mock = $this->getMockBuilder('Apperclass\Bundle\SitemapBundle\Sitemap\Encoder\SitemapXmlEncoder')
             ->disableOriginalConstructor()
             ->getMock();
 
         $mock
             ->expects($this->any())
-            ->method('toXml')
+            ->method('encode')
             ->willReturn('<xml></xml>');
+
+        return $mock;
+    }
+
+    protected function getSitemapEncoderManagerMock()
+    {
+        $mock = $this->getMockBuilder('Apperclass\Bundle\SitemapBundle\Sitemap\Encoder\SitemapEncoderManager')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mock
+            ->expects($this->any())
+            ->method('encode')
+            ->willReturn('<xml></xml>');
+
+        $mock
+            ->expects($this->any())
+            ->method('getFormats')
+            ->willReturn(array('xml'));
+
+        $mock
+            ->expects($this->any())
+            ->method('supportsFormat')
+            ->willReturn(true);
 
         return $mock;
     }

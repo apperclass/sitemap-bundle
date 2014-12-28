@@ -6,10 +6,12 @@
 
     <parameters>
         <parameter key="apperclass_sitemap.sitemap_generator.class">Apperclass\Bundle\SitemapBundle\Sitemap\SitemapGenerator</parameter>
-        <parameter key="apperclass_sitemap.sitemap_provider.class">Apperclass\Bundle\SitemapBundle\Sitemap\SitemapProvider</parameter>
-        <parameter key="apperclass_sitemap.sitemap_xml_encoder.class">Apperclass\Bundle\SitemapBundle\Sitemap\SitemapXmlEncoder</parameter>
+        <parameter key="apperclass_sitemap.sitemap_provider.class">Apperclass\Bundle\SitemapBundle\Sitemap\Provider\SitemapProvider</parameter>
+        <parameter key="apperclass_sitemap.sitemap_xml_encoder.class">Apperclass\Bundle\SitemapBundle\Sitemap\Encoder\SitemapXmlEncoder</parameter>
+        <parameter key="apperclass_sitemap.sitemap_text_encoder.class">Apperclass\Bundle\SitemapBundle\Sitemap\Encoder\SitemapTextEncoder</parameter>
+        <parameter key="apperclass_sitemap.sitemap_encoder_manager.class">Apperclass\Bundle\SitemapBundle\Sitemap\Encoder\SitemapEncoderManager</parameter>
+        <parameter key="apperclass_sitemap.sitemap_file_writer.class">Apperclass\Bundle\SitemapBundle\Sitemap\Writer\SitemapFileWriter</parameter>
         <parameter key="apperclass_sitemap.sitemap_generate_command.class">Apperclass\Bundle\SitemapBundle\Command\SitemapGenerateCommand</parameter>
-        <parameter key="apperclass_sitemap.sitemap_entities_provider.class">Apperclass\Bundle\SitemapBundle\Sitemap\SitemapEntitiesProvider</parameter>
     </parameters>
 
 
@@ -23,21 +25,28 @@
         <!-- SITEMAP PROVIDER -->
         <service id="apperclass_sitemap.sitemap_provider" class="%apperclass_sitemap.sitemap_provider.class%" />
 
-        <!-- SITEMAP XML ENCODER -->
-        <service id="apperclass_sitemap.sitemap_xml_encoder" class="%apperclass_sitemap.sitemap_xml_encoder.class%" />
-
-        <!-- SITEMAP ENTITIES PROVIDER -->
-        <service id="apperclass_sitemap.sitemap_entities_provider"
-                 class="%apperclass_sitemap.sitemap_entities_provider.class%">
-            <argument type="service" id="doctrine.orm.default_entity_manager" />
-            <tag name="apperclass_sitemap.sitemap_entities_provider" />
+        <!-- SITEMAP TEXT ENCODER -->
+        <service id="apperclass_sitemap.sitemap_text_encoder" class="%apperclass_sitemap.sitemap_text_encoder.class%">
+            <tag name="apperclass_sitemap.sitemap_encoder" />
         </service>
+
+        <!-- SITEMAP XML ENCODER -->
+        <service id="apperclass_sitemap.sitemap_xml_encoder" class="%apperclass_sitemap.sitemap_xml_encoder.class%">
+            <tag name="apperclass_sitemap.sitemap_encoder" />
+        </service>
+
+        <!-- SITEMAP ENCODER MANAGER -->
+        <service id="apperclass_sitemap.sitemap_encoder_manager" class="%apperclass_sitemap.sitemap_encoder_manager.class%" />
+
+        <!-- SITEMAP FILE WRITER -->
+        <service id="apperclass_sitemap.sitemap_file_writer" class="%apperclass_sitemap.sitemap_file_writer.class%" />
 
         <!-- SITEMAP GENERATE COMMAND -->
         <service id="apperclass_sitemap.sitemap_generate_command"
                  class="%apperclass_sitemap.sitemap_generate_command.class%">
             <argument type="service" id="apperclass_sitemap.sitemap_generator" />
-            <argument type="service" id="apperclass_sitemap.sitemap_xml_encoder" />
+            <argument type="service" id="apperclass_sitemap.sitemap_encoder_manager" />
+            <argument type="service" id="apperclass_sitemap.sitemap_file_writer" />
             <argument>%apperclass_sitemap.path%</argument>
             <tag name="console.command" />
         </service>

@@ -18,12 +18,6 @@
         </testsuite>
     </testsuites>
 
-    <groups>
-        <exclude>
-            <group>integration</group>
-        </exclude>
-    </groups>
-
     <php>
         <server name="KERNEL_DIR" value="./src/Tests/Fixtures/app" />
     </php>
