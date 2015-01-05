@@ -8,14 +8,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use Apperclass\Bundle\SitemapBundle\Sitemap\Encoder\SitemapEncoderManagerInterface;
-use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapGenerator;
-use Apperclass\Bundle\SitemapBundle\Sitemap\Writer\SitemapFileWriter;
+use Apperclass\SitemapBuilder\SitemapBuilderInterface;
+use Apperclass\SitemapBuilder\Encoder\SitemapEncoderManagerInterface;
+use Apperclass\SitemapBuilder\Writer\SitemapFileWriter;
 
 class SitemapGenerateCommand extends Command
 {
-    /** @var SitemapGenerator  */
-    protected $sitemapGenerator;
+    /** @var SitemapBuilder  */
+    protected $sitemapBuilder;
 
     /** @var SitemapEncoderManagerInterface */
     protected $sitemapEncoderManager;
@@ -29,17 +29,17 @@ class SitemapGenerateCommand extends Command
     protected $writer;
 
     /**
-     * @param SitemapGenerator $sitemapGenerator
+     * @param SitemapBuilder $sitemapBuilder
      * @param SitemapEncoderManagerInterface $sitemapEncoderManager
      * @param SitemapFileWriter $writer
      * @param $path
      */
-    public function __construct(SitemapGenerator $sitemapGenerator,
+    public function __construct(SitemapBuilderInterface $sitemapBuilder,
                                 SitemapEncoderManagerInterface $sitemapEncoderManager,
                                 SitemapFileWriter $writer,
                                 $path)
     {
-        $this->sitemapGenerator  = $sitemapGenerator;
+        $this->sitemapBuilder  = $sitemapBuilder;
         $this->sitemapEncoderManager  = $sitemapEncoderManager;
         $this->path   = $path;
         $this->writer = $writer;
@@ -76,14 +76,14 @@ class SitemapGenerateCommand extends Command
         $dump   = $input->getOption('dump');
         $path   = $input->getOption('path');
 
-        $sitemap = $this->sitemapGenerator->generateSitemap();
+        $sitemap = $this->sitemapBuilder->build();
         $string  = $this->sitemapEncoderManager->encode($sitemap, $format);
 
         if($dump) {
-            return $this->executeDump($output, $string);
+            $this->executeDump($output, $string);
+        }else{
+            $this->executeWrite($output, $path, $string);
         }
-
-        return $this->executeWrite($output, $path, $string);
     }
 
     protected function executeDump(OutputInterface $output, $string)

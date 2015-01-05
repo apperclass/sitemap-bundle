@@ -6,30 +6,31 @@
 
 
 Apperclass Sitemap Bundle help you to create a sitemap for your site. It's easy to extend and customize.
+Based on the [Apperclass SitemapBuilder library](https://github.com/apperclass/sitemap-builder).
 
 
-##  Create your own sitemap url provider
+##  Create your own sitemap populator
 
 Create a tagged service to populate the sitemap
 
 ```xml
-    <service id="my_project.my_custom_sitemap_url_provider" class="MyProject\Sitemap\MySitemapUrlProvider">
-        <tag name="apperclass_sitemap.sitemap_url_provider" />
+    <service id="my_project.my_custom_sitemap_populator" class="MyProject\Sitemap\MySitemapPopulator">
+        <tag name="apperclass_sitemap.sitemap_populator" />
     </service>
 ```
 
-Implements SitemapUrlProviderInterface as you need.
+Implements SitemapPopulatorInterface as you need.
 
 ```php
 <?php
 
 namespace MyProject\Sitemap;
 
-use Apperclass\Bundle\SitemapBundle\Sitemap\Model\SitemapInterface;
-use Apperclass\Bundle\SitemapBundle\Sitemap\Model\SitemapUrl;
-use Apperclass\Bundle\SitemapBundle\Sitemap\Provider\SitemapUrlProviderInterface;
+use Apperclass\SitemapBuilder\Model\SitemapInterface;
+use Apperclass\SitemapBuilder\Model\SitemapUrl;
+use Apperclass\SitemapBuilder\SitemapPopulatorInterface;
 
-class MySitemapUrlProvider implements SitemapUrlProviderInterface
+class MySitemapPopulator implements SitemapPopulatorInterface
 {
 
     /**
@@ -47,7 +48,7 @@ class MySitemapUrlProvider implements SitemapUrlProviderInterface
 }
 ```
 
-This example of SitemapUrlProvider is trivial but it's a service so you can inject all you need to
+This example of SitemapPopulator is trivial but it's a service so you can inject all you need to
 populate the sitemap.
 
 
@@ -80,7 +81,8 @@ You can add a custom encoder/format by implementing a SitemapEncoderInterface:
 
 namespace MyProject\Sitemap;
 
-use Apperclass\Bundle\SitemapBundle\Sitemap\Encoder\SitemapEncoderInterface;
+use Apperclass\SitemapBuilder\Model\SitemapInterface;
+use Apperclass\SitemapBuilder\Encoder\SitemapEncoderInterface;
 
 class MyFormatEncoder implements SitemapEncoderInterface
 {

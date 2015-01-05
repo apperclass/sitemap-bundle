@@ -6,9 +6,6 @@ use Apperclass\Bundle\SitemapBundle\DependencyInjection\Compiler\SitemapEncoderC
 
 class SitemapEncoderCompilerPassTest extends CompilerPassTestCase
 {
-    /**
-     * @var SitemapEntitiesProviderCompilerPass
-     */
     private $compilerPass;
 
     protected function setUp()

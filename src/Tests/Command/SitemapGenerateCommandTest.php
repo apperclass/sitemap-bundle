@@ -2,12 +2,12 @@
 
 namespace Apperclass\Bundle\SitemapBundle\Tests\Command;
 
-use Apperclass\Bundle\SitemapBundle\Command\SitemapGenerateCommand;
-use Apperclass\Bundle\SitemapBundle\Sitemap\Writer\SitemapFileWriter;
-use Apperclass\Bundle\SitemapBundle\Sitemap\Model\Sitemap;
-use Apperclass\Bundle\SitemapBundle\Tests\Filesystem\FilesystemTestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Apperclass\Bundle\SitemapBundle\Command\SitemapGenerateCommand;
+use Apperclass\SitemapBuilder\Writer\SitemapFileWriter;
+use Apperclass\SitemapBuilder\Model\Sitemap;
+use Apperclass\SitemapBuilder\Tests\Filesystem\FilesystemTestCase;
 
 
 class GenerateSitemapCommandTest extends FilesystemTestCase
@@ -63,7 +63,7 @@ class GenerateSitemapCommandTest extends FilesystemTestCase
     {
         $application = new Application();
         $application->add(new SitemapGenerateCommand(
-            $this->getSitemapGeneratorMock(),
+            $this->getSitemapBuilderMock(),
             $this->getSitemapEncoderManagerMock(),
             (new SitemapFileWriter()),
             $this->path
@@ -81,37 +81,23 @@ class GenerateSitemapCommandTest extends FilesystemTestCase
         return new CommandTester($command);
     }
 
-    protected  function getSitemapGeneratorMock()
+    protected  function getSitemapBuilderMock()
     {
-        $mock = $this->getMockBuilder('Apperclass\Bundle\SitemapBundle\Sitemap\SitemapGenerator')
+        $mock = $this->getMockBuilder('Apperclass\SitemapBuilder\SitemapBuilderInterface')
             ->disableOriginalConstructor()
             ->getMock();
 
         $mock
             ->expects($this->any())
-            ->method('generateSitemap')
+            ->method('build')
             ->willReturn(new Sitemap());
-
-        return $mock;
-    }
-
-    protected function getSitemapXmlEncoderMock()
-    {
-        $mock = $this->getMockBuilder('Apperclass\Bundle\SitemapBundle\Sitemap\Encoder\SitemapXmlEncoder')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mock
-            ->expects($this->any())
-            ->method('encode')
-            ->willReturn('<xml></xml>');
 
         return $mock;
     }
 
     protected function getSitemapEncoderManagerMock()
     {
-        $mock = $this->getMockBuilder('Apperclass\Bundle\SitemapBundle\Sitemap\Encoder\SitemapEncoderManager')
+        $mock = $this->getMockBuilder('Apperclass\SitemapBuilder\Encoder\SitemapEncoderManager')
             ->disableOriginalConstructor()
             ->getMock();
 
