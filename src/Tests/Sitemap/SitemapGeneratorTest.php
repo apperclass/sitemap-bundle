@@ -2,32 +2,32 @@
 
 namespace Apperclass\Bundle\SitemapBundle\Tests\Sitemap;
 
-use Apperclass\Bundle\SitemapBundle\Sitemap\Sitemap;
 use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapGenerator;
-use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapProvider;
-use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapXmlEncoder;
-use Apperclass\Bundle\SitemapBundle\Tests\Mock\EntitiesProviderMockFactory;
-use Apperclass\Bundle\SitemapBundle\Tests\Provider\SitemapFactory;
+use Apperclass\Bundle\SitemapBundle\Tests\Fixtures\SitemapUrlProviderExample;
+use Apperclass\Bundle\SitemapBundle\Tests\Sitemap\Provider\TestableSitemapProvider;
 
 class SitemapGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @dataProvider sitemapProvider
+     * @var SitemapGenerator
      */
-    public function testGenerateSitemap($sitemap)
+    protected $sitemapGenerator;
+
+    public function setUp()
     {
-        $entitiesMockFactory = new EntitiesProviderMockFactory($this);
-        $sitemapGenerator = new SitemapGenerator(new SitemapProvider());
-        $sitemapGenerator->addSitemapEntitiesProvider($entitiesMockFactory->getMock());
-        $sitemap = $sitemapGenerator->generateSitemap($sitemap);
-        $this->assertTrue($sitemap instanceof Sitemap, "Generated sitemap is not instance of Sitemap");
+        $sitemapProvider = new TestableSitemapProvider();
+        $sitemapProvider->addSitemapUrlProvider(new SitemapUrlProviderExample());
+
+        $this->sitemapGenerator = new SitemapGenerator($sitemapProvider);
     }
 
-    public function sitemapProvider()
+    public function testGenerateSitemap()
     {
-        $provider = new SitemapFactory();
+        $sitemap = $this
+            ->sitemapGenerator
+            ->generateSitemap();
 
-        return array(array($provider->getRandomSitemap()));
+        $this->assertInstanceOf('Apperclass\Bundle\SitemapBundle\Sitemap\Model\SitemapInterface', $sitemap);
     }
 
 }

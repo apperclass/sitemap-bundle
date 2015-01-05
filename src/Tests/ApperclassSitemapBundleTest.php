@@ -1,17 +1,8 @@
 <?php
-/**
- * @package Apperclass\Bundle\SitemapBundle\Tests
- * @author Ruben Barilani <ruben.barilani.dev@gmail.com>
- * @date 19/12/14
- * @time 14:53
- * @license http://opensource.org/licenses/MIT MIT license 
- */
 
 namespace Apperclass\Bundle\SitemapBundle\Tests;
 
-
 use Apperclass\Bundle\SitemapBundle\ApperclassSitemapBundle;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ApperclassSitemapBundleTest extends \PHPUnit_Framework_TestCase
 {

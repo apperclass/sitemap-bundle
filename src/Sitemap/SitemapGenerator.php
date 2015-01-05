@@ -1,50 +1,24 @@
 <?php
 
 namespace Apperclass\Bundle\SitemapBundle\Sitemap;
+use Apperclass\Bundle\SitemapBundle\Sitemap\Model\SitemapInterface;
+use Apperclass\Bundle\SitemapBundle\Sitemap\Provider\SitemapProvider;
 
-/**
- * Class SitemapGenerator
- * It loads all entities and generates the sitemap.
- *
- * @package Apperclass\Bundle\SitemapBundle\Sitemap
- */
 class SitemapGenerator
 {
-    /** @var array */
-    protected $sitemapEntitiesProviders;
     /** @var SitemapProvider  */
     protected $sitemapProvider;
 
-    /**
-     * __construct
-     */
     public function __construct(SitemapProvider $sitemapProvider)
     {
-        $this->sitemapEntitiesProviders = array();
         $this->sitemapProvider = $sitemapProvider;
     }
 
     /**
-     * @param SitemapEntitiesProviderInterface $sitemapEntitiesProvider
-     */
-    public function addSitemapEntitiesProvider(SitemapEntitiesProviderInterface $sitemapEntitiesProvider)
-    {
-        $this->sitemapEntitiesProviders[] = $sitemapEntitiesProvider;
-    }
-
-    /**
-     * @return Sitemap
+     * @return SitemapInterface
      */
     public function generateSitemap()
     {
-        $entities = array();
-        /** @var SitemapEntitiesProviderInterface $provider */
-        foreach ($this->sitemapEntitiesProviders as $provider) {
-            $entities = array_merge($entities, $provider->getEntities());
-        }
-
-        return $this->sitemapProvider->getSitemap($entities);
+        return $this->sitemapProvider->getSitemap();
     }
-
-
 }

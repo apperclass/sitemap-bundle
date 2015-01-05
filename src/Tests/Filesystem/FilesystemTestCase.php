@@ -33,7 +33,7 @@ abstract class FilesystemTestCase extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        $this->clean($this->workspace);
+        if($this->workspace) { $this->clean($this->workspace); }
     }
 
     /**

@@ -8,12 +8,11 @@ framework:
     translator:      { fallback: en }
     profiler:        { only_exceptions: false }
 
-# Doctrine Configuration
-doctrine:
-    dbal:
-        driver:   pdo_sqlite
-        path:     :memory:
-        memory:   true
-    orm:
-        default_entity_manager: default
+services:
+    fixtures.sitemap_url_provider_example:
+        class: Apperclass\Bundle\SitemapBundle\Tests\Fixtures\SitemapUrlProviderExample
+        tags:
+            -  { name: apperclass_sitemap.sitemap_url_provider }
+
+
 
