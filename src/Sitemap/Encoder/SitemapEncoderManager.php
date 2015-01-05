@@ -89,7 +89,7 @@ class SitemapEncoderManager implements SitemapEncoderManagerInterface
      * @param $format
      * @return null|SitemapEncoderInterface
      */
-    protected function findEncoderByFormat($format)
+    public function findEncoderByFormat($format)
     {
         foreach($this->encoders as $encoder)
         {
@@ -97,6 +97,5 @@ class SitemapEncoderManager implements SitemapEncoderManagerInterface
                 return $encoder;
             }
         }
-        return null;
     }
 } 

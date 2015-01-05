@@ -27,24 +27,7 @@ class GenerateSitemapCommandTest extends FilesystemTestCase
 
         $this->path   = $this->workspace . '/sitemap.xml';
 
-        $application = new Application();
-        $application->add(new SitemapGenerateCommand(
-            $this->getSitemapGeneratorMock(),
-            $this->getSitemapEncoderManagerMock(),
-            (new SitemapFileWriter()),
-            $this->path
-        ));
-
-        $dialog = $this->getMock('Symfony\Component\Console\Helper\DialogHelper', array('askConfirmation'));
-        $dialog->expects($this->any())
-            ->method('askConfirmation')
-            ->will($this->returnValue(true)); // The user confirms
-
-        // We override the standard helper with our mock
-        $command = $application->find('apperclass:sitemap:generate');
-        $command->getHelperSet()->set($dialog, 'dialog');
-
-        $this->commandTester = new CommandTester($command);
+        $this->commandTester = $this->getCommandTester();
     }
 
     public function testExecute()
@@ -53,9 +36,15 @@ class GenerateSitemapCommandTest extends FilesystemTestCase
         $this->assertFileExists($this->path);
     }
 
-    /**
-     * @group only
-     */
+    public function testExecuteAbortedAfterAskConfirmation()
+    {
+        $commandTester = $this->getCommandTester(false);
+        $commandTester->execute(array());
+        $this->assertRegExp('/aborted/i', $commandTester->getDisplay());
+        $this->assertFileNotExists($this->path);
+    }
+
+
     public function testExecuteWithDumpOption()
     {
         $this->commandTester->execute(array('--dump' => true));
@@ -68,6 +57,28 @@ class GenerateSitemapCommandTest extends FilesystemTestCase
         $path = $this->workspace . '/foobar.xml';
         $this->commandTester->execute(array('--path' => $path));
         $this->assertFileExists($path);
+    }
+
+    protected function getCommandTester($dialogConfirmation = true)
+    {
+        $application = new Application();
+        $application->add(new SitemapGenerateCommand(
+            $this->getSitemapGeneratorMock(),
+            $this->getSitemapEncoderManagerMock(),
+            (new SitemapFileWriter()),
+            $this->path
+        ));
+
+        $dialog = $this->getMock('Symfony\Component\Console\Helper\DialogHelper', array('askConfirmation'));
+        $dialog->expects($this->any())
+            ->method('askConfirmation')
+            ->will($this->returnValue($dialogConfirmation)); // The user confirms
+
+        // We override the standard helper with our mock
+        $command = $application->find('apperclass:sitemap:generate');
+        $command->getHelperSet()->set($dialog, 'dialog');
+
+        return new CommandTester($command);
     }
 
     protected  function getSitemapGeneratorMock()

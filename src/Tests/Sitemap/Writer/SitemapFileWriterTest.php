@@ -24,6 +24,16 @@ class SitemapFileWriterTest extends FilesystemTestCase
         $this->path = $this->workspace . '/sitemap.xml';
     }
 
+    public function testDumpThrowsExceptionIfPathIsNotSet()
+    {
+        try{
+            $this->writer->write('hello');
+        }catch (\Exception $e) {
+            $this->assertEquals('Path is not set', $e->getMessage());
+        }
+        
+    }
+
     public function testSetPathExceptionDirDoesntExists()
     {
         try{
@@ -41,6 +51,13 @@ class SitemapFileWriterTest extends FilesystemTestCase
         }catch(\Exception $e) {
             $this->assertEquals("Path '". $this->workspace ."' is a dir not an absolute path to the output file!", $e->getMessage());
         }
+    }
+
+    public function testGetPath()
+    {
+        $this->writer->setPath($this->path);
+
+        $this->assertEquals($this->path, $this->writer->getPath());
     }
 
     public function testDump()
