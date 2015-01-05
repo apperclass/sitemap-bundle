@@ -5,8 +5,7 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="apperclass_sitemap.sitemap_generator.class">Apperclass\Bundle\SitemapBundle\Sitemap\SitemapGenerator</parameter>
-        <parameter key="apperclass_sitemap.sitemap_provider.class">Apperclass\Bundle\SitemapBundle\Sitemap\Provider\SitemapProvider</parameter>
+        <parameter key="apperclass_sitemap.sitemap_builder.class">Apperclass\Bundle\SitemapBundle\Sitemap\SitemapBuilder</parameter>
         <parameter key="apperclass_sitemap.sitemap_xml_encoder.class">Apperclass\Bundle\SitemapBundle\Sitemap\Encoder\SitemapXmlEncoder</parameter>
         <parameter key="apperclass_sitemap.sitemap_text_encoder.class">Apperclass\Bundle\SitemapBundle\Sitemap\Encoder\SitemapTextEncoder</parameter>
         <parameter key="apperclass_sitemap.sitemap_encoder_manager.class">Apperclass\Bundle\SitemapBundle\Sitemap\Encoder\SitemapEncoderManager</parameter>
@@ -17,13 +16,8 @@
 
     <services>
 
-        <!-- SITEMAP GENERATOR -->
-        <service id="apperclass_sitemap.sitemap_generator" class="%apperclass_sitemap.sitemap_generator.class%">
-            <argument type="service" id="apperclass_sitemap.sitemap_provider" />
-        </service>
-
-        <!-- SITEMAP PROVIDER -->
-        <service id="apperclass_sitemap.sitemap_provider" class="%apperclass_sitemap.sitemap_provider.class%" />
+        <!-- SITEMAP BUILDER -->
+        <service id="apperclass_sitemap.sitemap_builder" class="%apperclass_sitemap.sitemap_builder.class%" />
 
         <!-- SITEMAP TEXT ENCODER -->
         <service id="apperclass_sitemap.sitemap_text_encoder" class="%apperclass_sitemap.sitemap_text_encoder.class%">
@@ -44,7 +38,7 @@
         <!-- SITEMAP GENERATE COMMAND -->
         <service id="apperclass_sitemap.sitemap_generate_command"
                  class="%apperclass_sitemap.sitemap_generate_command.class%">
-            <argument type="service" id="apperclass_sitemap.sitemap_generator" />
+            <argument type="service" id="apperclass_sitemap.sitemap_builder" />
             <argument type="service" id="apperclass_sitemap.sitemap_encoder_manager" />
             <argument type="service" id="apperclass_sitemap.sitemap_file_writer" />
             <argument>%apperclass_sitemap.path%</argument>

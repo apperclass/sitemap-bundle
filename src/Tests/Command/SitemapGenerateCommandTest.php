@@ -63,7 +63,7 @@ class GenerateSitemapCommandTest extends FilesystemTestCase
     {
         $application = new Application();
         $application->add(new SitemapGenerateCommand(
-            $this->getSitemapGeneratorMock(),
+            $this->getSitemapBuilderMock(),
             $this->getSitemapEncoderManagerMock(),
             (new SitemapFileWriter()),
             $this->path
@@ -81,15 +81,15 @@ class GenerateSitemapCommandTest extends FilesystemTestCase
         return new CommandTester($command);
     }
 
-    protected  function getSitemapGeneratorMock()
+    protected  function getSitemapBuilderMock()
     {
-        $mock = $this->getMockBuilder('Apperclass\Bundle\SitemapBundle\Sitemap\SitemapGenerator')
+        $mock = $this->getMockBuilder('Apperclass\Bundle\SitemapBundle\Sitemap\SitemapBuilder')
             ->disableOriginalConstructor()
             ->getMock();
 
         $mock
             ->expects($this->any())
-            ->method('generateSitemap')
+            ->method('build')
             ->willReturn(new Sitemap());
 
         return $mock;

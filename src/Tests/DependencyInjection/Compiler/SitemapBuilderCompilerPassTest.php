@@ -2,21 +2,18 @@
 
 namespace Apperclass\Bundle\SitemapBundle\Tests\DependencyInjection\Compiler;
 
-use Apperclass\Bundle\SitemapBundle\DependencyInjection\Compiler\SitemapEntitiesProviderCompilerPass;
-use Apperclass\Bundle\SitemapBundle\DependencyInjection\Compiler\SitemapUrlProviderCompilerPass;
+use Apperclass\Bundle\SitemapBundle\DependencyInjection\Compiler\SitemapBuilderCompilerPass;
 
-class SitemapUrlProviderCompilerPassTest extends CompilerPassTestCase
+class SitemapBuilderCompilerPassTest extends CompilerPassTestCase
 {
-    /**
-     * @var SitemapEntitiesProviderCompilerPass
-     */
+
     private $compilerPass;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->compilerPass = new SitemapUrlProviderCompilerPass();
+        $this->compilerPass = new SitemapBuilderCompilerPass();
     }
 
     public function testProcessHasNoSitemapGeneratorDefinition()
@@ -24,7 +21,7 @@ class SitemapUrlProviderCompilerPassTest extends CompilerPassTestCase
         $this->containerBuilderMock
              ->expects($this->exactly(1))
              ->method('hasDefinition')
-             ->with('apperclass_sitemap.sitemap_provider')
+             ->with('apperclass_sitemap.sitemap_builder')
              ->willReturn(false);
 
         $this->compilerPass->process($this->containerBuilderMock);
@@ -37,7 +34,7 @@ class SitemapUrlProviderCompilerPassTest extends CompilerPassTestCase
         $this->containerBuilderMock
             ->expects($this->exactly(1))
             ->method('hasDefinition')
-            ->with('apperclass_sitemap.sitemap_provider')
+            ->with('apperclass_sitemap.sitemap_builder')
             ->willReturn(true);
 
         $definitionMock = $this->getDefinitionMock();
@@ -49,13 +46,13 @@ class SitemapUrlProviderCompilerPassTest extends CompilerPassTestCase
         $this->containerBuilderMock
             ->expects($this->exactly(1))
             ->method('getDefinition')
-            ->with('apperclass_sitemap.sitemap_provider')
+            ->with('apperclass_sitemap.sitemap_builder')
             ->willReturn($definitionMock);
 
         $this->containerBuilderMock
             ->expects($this->exactly(1))
             ->method('findTaggedServiceIds')
-            ->with('apperclass_sitemap.sitemap_url_provider')
+            ->with('apperclass_sitemap.sitemap_populator')
             ->willReturn($taggedServices);
 
         $this->compilerPass->process($this->containerBuilderMock);

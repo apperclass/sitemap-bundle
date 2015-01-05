@@ -2,17 +2,12 @@
 
 namespace Apperclass\Bundle\SitemapBundle\Tests;
 
-
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-/**
- * @group integration
- */
 class ApperclassSitemapBundleIntegrationTest extends WebTestCase
 {
     protected static $serviceIds = array(
-        'apperclass_sitemap.sitemap_generator',
-        'apperclass_sitemap.sitemap_provider',
+        'apperclass_sitemap.sitemap_builder',
         'apperclass_sitemap.sitemap_xml_encoder',
         'apperclass_sitemap.sitemap_text_encoder',
         'apperclass_sitemap.sitemap_encoder_manager',

@@ -2,7 +2,7 @@
 
 namespace Apperclass\Bundle\SitemapBundle;
 
-use Apperclass\Bundle\SitemapBundle\DependencyInjection\Compiler\SitemapUrlProviderCompilerPass;
+use Apperclass\Bundle\SitemapBundle\DependencyInjection\Compiler\SitemapBuilderCompilerPass;
 use Apperclass\Bundle\SitemapBundle\DependencyInjection\Compiler\SitemapEncoderCompilerPass;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -14,7 +14,7 @@ class ApperclassSitemapBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new SitemapUrlProviderCompilerPass());
+        $container->addCompilerPass(new SitemapBuilderCompilerPass());
         $container->addCompilerPass(new SitemapEncoderCompilerPass());
     }
 }

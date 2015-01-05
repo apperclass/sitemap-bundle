@@ -5,9 +5,9 @@ namespace Apperclass\Bundle\SitemapBundle\Tests\Fixtures;
 
 use Apperclass\Bundle\SitemapBundle\Sitemap\Model\SitemapInterface;
 use Apperclass\Bundle\SitemapBundle\Sitemap\Model\SitemapUrl;
-use Apperclass\Bundle\SitemapBundle\Sitemap\Provider\SitemapUrlProviderInterface;
+use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapPopulatorInterface;
 
-class SitemapUrlProviderExample implements  SitemapUrlProviderInterface
+class SitemapPopulatorExample implements  SitemapPopulatorInterface
 {
     public function populate(SitemapInterface $sitemap)
     {
