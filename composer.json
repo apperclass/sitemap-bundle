@@ -1,6 +1,6 @@
 {
-    "name": "apperclass/sitemap-bundle",
-    "description": "Create sitemap.xml reading your entities",
+    "name": "apperclass/sitemap-builder",
+    "description": "Create a sitemap programmatically and write it to a file in different formats",
     "authors": [
         {
             "name": "oriodesign",
@@ -20,5 +20,8 @@
     },
     "scripts" : {
         "test" : "vendor/bin/phpunit"
-    }
+    },
+    "repositories" : [
+        { "type":"vcs", "url":"https://github.com/apperclass/sitemap-builder.git" }
+    ]
 }
