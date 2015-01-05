@@ -10,7 +10,7 @@ framework:
 
 services:
     fixtures.sitemap_url_provider_example:
-        class: Apperclass\Bundle\SitemapBundle\Tests\Fixtures\SitemapPopulatorExample
+        class: Apperclass\SitemapBuilder\Tests\Fixtures\SitemapPopulatorExample
         tags:
             -  { name: apperclass_sitemap.sitemap_populator }
 

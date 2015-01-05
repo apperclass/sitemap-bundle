@@ -1,10 +1,16 @@
 <?php
-    ini_set('error_reporting', E_ALL); // or error_reporting(E_ALL);
-    ini_set('display_errors', '1');
-    ini_set('display_startup_errors', '1');
 
-    $file = __DIR__.'/../../vendor/autoload.php';
-    if (!file_exists($file)) {
-        throw new RuntimeException('Install dependencies to run test suite.');
-    }
-    $autoload = require_once $file;
+if (!($loader = @include __DIR__ . '/../../vendor/autoload.php')) {
+    exit(<<<EOT
+You need to install the project dependencies using Composer:
+$ wget http://getcomposer.org/composer.phar
+OR
+$ curl -s https://getcomposer.org/installer | php
+$ php composer.phar install
+
+EOT
+    );
+}
+
+$loader->setPsr4("Apperclass\\SitemapBuilder\\Tests\\", __DIR__ . "/../../vendor/apperclass/sitemap-builder/tests");
+

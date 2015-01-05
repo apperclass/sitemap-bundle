@@ -8,9 +8,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use Apperclass\Bundle\SitemapBundle\Sitemap\SitemapBuilder;
-use Apperclass\Bundle\SitemapBundle\Sitemap\Encoder\SitemapEncoderManagerInterface;
-use Apperclass\Bundle\SitemapBundle\Sitemap\Writer\SitemapFileWriter;
+use Apperclass\SitemapBuilder\SitemapBuilderInterface;
+use Apperclass\SitemapBuilder\Encoder\SitemapEncoderManagerInterface;
+use Apperclass\SitemapBuilder\Writer\SitemapFileWriter;
 
 class SitemapGenerateCommand extends Command
 {
@@ -34,7 +34,7 @@ class SitemapGenerateCommand extends Command
      * @param SitemapFileWriter $writer
      * @param $path
      */
-    public function __construct(SitemapBuilder $sitemapBuilder,
+    public function __construct(SitemapBuilderInterface $sitemapBuilder,
                                 SitemapEncoderManagerInterface $sitemapEncoderManager,
                                 SitemapFileWriter $writer,
                                 $path)
