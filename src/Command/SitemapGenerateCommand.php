@@ -89,7 +89,6 @@ class SitemapGenerateCommand extends Command
     protected function executeDump(OutputInterface $output, $string)
     {
         $output->writeln($string);
-        return;
     }
 
     protected function executeWrite(OutputInterface $output, $path, $string)
@@ -110,7 +109,5 @@ class SitemapGenerateCommand extends Command
             ->write($string);
 
         $output->writeln("<info>file '" . realpath($path) ."' was updated.</info>");
-
-        return;
     }
 }
